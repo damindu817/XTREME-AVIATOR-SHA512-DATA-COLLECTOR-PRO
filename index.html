@@ -100,7 +100,7 @@
     
     .action-buttons {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: 1fr 1fr 1fr;
       gap: 10px;
       margin-top: 20px;
     }
@@ -145,6 +145,15 @@
       background: var(--danger-dark);
     }
     
+    .btn-warning {
+      background: var(--warning);
+      color: var(--dark-1);
+    }
+    
+    .btn-warning:hover {
+      background: #e6ac00;
+    }
+    
     .data-table-container {
       max-height: 400px;
       overflow-y: auto;
@@ -167,7 +176,7 @@
     }
     
     .data-table th {
-      background: rgba(0, 0, 0, 0.2);
+      background: var(--dark-2);
       font-weight: 600;
       position: sticky;
       top: 0;
@@ -344,8 +353,11 @@
         <button class="btn btn-primary" id="saveBtn">
           <i class="fas fa-save"></i> Save Data
         </button>
+        <button class="btn btn-warning" id="clearFormBtn">
+          <i class="fas fa-eraser"></i> Clear Form
+        </button>
         <button class="btn btn-danger" id="clearAllBtn">
-          <i class="fas fa-trash-alt"></i> Clear All Data
+          <i class="fas fa-trash-alt"></i> Clear All
         </button>
       </div>
       
@@ -400,6 +412,9 @@
       
       // Save button
       document.getElementById("saveBtn").addEventListener('click', saveData);
+      
+      // Clear form button
+      document.getElementById("clearFormBtn").addEventListener('click', clearForm);
       
       // Clear all button
       document.getElementById("clearAllBtn").addEventListener('click', confirmClearAll);
@@ -537,11 +552,13 @@
       });
     }
     
-    // Clear form
+    // Clear form inputs
     function clearForm() {
       document.getElementById("hashInput").value = '';
       document.getElementById("multiplierInput").value = '';
       document.getElementById("hashInput").focus();
+      showAlert("Form cleared", "success", 1500);
+      playSound('click');
     }
     
     // Confirm clear all data
