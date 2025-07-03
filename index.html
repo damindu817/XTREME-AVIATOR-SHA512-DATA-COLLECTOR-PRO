@@ -11,6 +11,7 @@
       --primary-dark: #2667cc;
       --secondary: #8338ec;
       --danger: #ff006e;
+      --danger-dark: #cc0058;
       --success: #06d6a0;
       --warning: #ffbe0b;
       --dark-1: #0a0e17;
@@ -97,35 +98,6 @@
       box-shadow: 0 0 0 3px rgba(58, 134, 255, 0.2);
     }
     
-    .odd-selector {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
-      margin-bottom: 20px;
-    }
-    
-    .odd-btn {
-      padding: 12px;
-      border: none;
-      border-radius: 8px;
-      font-weight: 600;
-      cursor: pointer;
-      background: var(--dark-3);
-      color: var(--light-1);
-      text-align: center;
-      transition: all 0.3s;
-    }
-    
-    .odd-btn:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-    }
-    
-    .odd-btn.selected {
-      background: var(--primary);
-      color: white;
-    }
-    
     .action-buttons {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -170,16 +142,22 @@
     }
     
     .btn-danger:hover {
-      background: #e00064;
+      background: var(--danger-dark);
+    }
+    
+    .data-table-container {
+      max-height: 400px;
+      overflow-y: auto;
+      margin-top: 20px;
+      border-radius: 8px;
+      background: var(--dark-3);
+      scroll-behavior: smooth;
     }
     
     .data-table {
       width: 100%;
       border-collapse: collapse;
-      margin-top: 20px;
       background: var(--dark-3);
-      border-radius: 8px;
-      overflow: hidden;
     }
     
     .data-table th, .data-table td {
@@ -191,6 +169,8 @@
     .data-table th {
       background: rgba(0, 0, 0, 0.2);
       font-weight: 600;
+      position: sticky;
+      top: 0;
     }
     
     .data-table tr:last-child td {
@@ -206,13 +186,80 @@
       border-top: 1px solid rgba(255, 255, 255, 0.05);
     }
     
+    /* Custom Alert */
+    .custom-alert {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--dark-3);
+      color: var(--light-1);
+      padding: 15px 25px;
+      border-radius: 8px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+      border-left: 5px solid var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      z-index: 1000;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    
+    .custom-alert.show {
+      opacity: 1;
+    }
+    
+    .custom-alert.error {
+      border-left-color: var(--danger);
+    }
+    
+    .custom-alert.success {
+      border-left-color: var(--success);
+    }
+    
+    .custom-alert.warning {
+      border-left-color: var(--warning);
+    }
+    
+    .badge {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      margin-left: 5px;
+    }
+    
+    .badge-primary {
+      background: var(--primary);
+      color: white;
+    }
+    
+    .badge-danger {
+      background: var(--danger);
+      color: white;
+    }
+    
+    .badge-success {
+      background: var(--success);
+      color: white;
+    }
+    
+    /* Responsive table */
     @media (max-width: 768px) {
-      .odd-selector {
-        grid-template-columns: repeat(2, 1fr);
+      .data-table-container {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
       }
       
       .action-buttons {
         grid-template-columns: 1fr;
+      }
+      
+      .data-table td, .data-table th {
+        min-width: 120px;
       }
     }
     
@@ -221,8 +268,22 @@
         font-size: 1.4rem;
       }
       
-      .odd-selector {
-        grid-template-columns: 1fr;
+      .content {
+        padding: 15px;
+      }
+      
+      .data-table td, .data-table th {
+        padding: 8px 10px;
+        font-size: 0.9rem;
+      }
+      
+      .btn {
+        padding: 10px;
+        font-size: 0.9rem;
+      }
+      
+      .data-table-container {
+        max-height: 300px;
       }
     }
     
@@ -235,13 +296,32 @@
     .fade-in {
       animation: fadeIn 0.3s ease-out;
     }
+    
+    /* Scrollbar styling */
+    .data-table-container::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    
+    .data-table-container::-webkit-scrollbar-track {
+      background: var(--dark-2);
+    }
+    
+    .data-table-container::-webkit-scrollbar-thumb {
+      background: var(--primary);
+      border-radius: 4px;
+    }
+    
+    .data-table-container::-webkit-scrollbar-thumb:hover {
+      background: var(--primary-dark);
+    }
   </style>
 </head>
 <body>
   <div class="main-container">
     <div class="header">
       <h1>XTREME AVIATOR SHA512 DATA COLLECTOR PRO</h1>
-      <p>Advanced SHA512 Hash & Odd Value Collection System</p>
+      <p>Advanced SHA512 Hash & Multiplier Collection System</p>
     </div>
     
     <div class="datetime">
@@ -251,34 +331,21 @@
     
     <div class="content">
       <div class="input-group">
-        <label for="hashInput">Enter SHA512 Hash <small>(128-character hexadecimal)</small></label>
+        <label for="hashInput">Enter SHA512 Hash <span class="badge badge-primary">128-char</span></label>
         <input type="text" id="hashInput" placeholder="Paste Aviator game SHA512 hash here..." autocomplete="off" autocorrect="off" spellcheck="false">
       </div>
       
       <div class="input-group">
-        <label for="oddSelect">Select Odd Value</label>
-        <div class="odd-selector">
-          <button class="odd-btn" data-odd="2">2×</button>
-          <button class="odd-btn" data-odd="3">3×</button>
-          <button class="odd-btn" data-odd="4">4×</button>
-          <button class="odd-btn" data-odd="7">7×</button>
-          <button class="odd-btn" data-odd="10">10×</button>
-          <button class="odd-btn" data-odd="100">100×</button>
-        </div>
-        <input type="hidden" id="selectedOdd">
-      </div>
-      
-      <div class="input-group">
-        <label for="multiplierInput">Actual Multiplier (Optional)</label>
-        <input type="number" id="multiplierInput" placeholder="Enter actual multiplier if known" step="0.01" min="1">
+        <label for="multiplierInput">Multiplier Value <span class="badge badge-success">Required</span></label>
+        <input type="number" id="multiplierInput" placeholder="Enter actual multiplier" step="0.01" min="1" required>
       </div>
       
       <div class="action-buttons">
         <button class="btn btn-primary" id="saveBtn">
           <i class="fas fa-save"></i> Save Data
         </button>
-        <button class="btn btn-secondary" id="clearBtn">
-          <i class="fas fa-broom"></i> Clear
+        <button class="btn btn-danger" id="clearAllBtn">
+          <i class="fas fa-trash-alt"></i> Clear All Data
         </button>
       </div>
       
@@ -291,25 +358,32 @@
         </button>
       </div>
       
-      <table class="data-table" id="dataTable">
-        <thead>
-          <tr>
-            <th>Timestamp</th>
-            <th>SHA512 Hash</th>
-            <th>Odd</th>
-            <th>Multiplier</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody id="tableBody">
-          <!-- Data will be inserted here -->
-        </tbody>
-      </table>
+      <div class="data-table-container">
+        <table class="data-table" id="dataTable">
+          <thead>
+            <tr>
+              <th>Timestamp</th>
+              <th>SHA512 Hash</th>
+              <th>Multiplier</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="tableBody">
+            <!-- Data will be inserted here -->
+          </tbody>
+        </table>
+      </div>
     </div>
     
     <div class="footer">
       XTREME AVIATOR SHA512 DATA COLLECTOR PRO © <span id="current-year"></span> | ALL RIGHTS RESERVED
     </div>
+  </div>
+
+  <!-- Custom Alert -->
+  <div class="custom-alert" id="customAlert">
+    <i class="fas fa-info-circle"></i>
+    <span id="alertMessage"></span>
   </div>
 
   <script>
@@ -324,29 +398,20 @@
       // Auto-focus hash input
       document.getElementById("hashInput").focus();
       
-      // Odd selection
-      document.querySelectorAll('.odd-btn').forEach(btn => {
-        btn.addEventListener('click', function() {
-          document.querySelectorAll('.odd-btn').forEach(b => b.classList.remove('selected'));
-          this.classList.add('selected');
-          document.getElementById("selectedOdd").value = this.dataset.odd;
-        });
-      });
-      
       // Save button
       document.getElementById("saveBtn").addEventListener('click', saveData);
       
-      // Clear button
-      document.getElementById("clearBtn").addEventListener('click', clearForm);
+      // Clear all button
+      document.getElementById("clearAllBtn").addEventListener('click', confirmClearAll);
       
       // Export buttons
       document.getElementById("exportJsonBtn").addEventListener('click', exportJson);
       document.getElementById("exportExcelBtn").addEventListener('click', exportExcel);
       
-      // Auto move to odd selection after hash input
+      // Auto validate hash input
       document.getElementById("hashInput").addEventListener('input', function() {
         if (this.value.length === 128 && /^[a-f0-9]+$/i.test(this.value)) {
-          document.querySelector('.odd-selector').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+          document.getElementById("multiplierInput").focus();
         }
       });
     });
@@ -359,21 +424,62 @@
       });
       document.getElementById("current-time").textContent = now.toLocaleTimeString();
       document.getElementById("current-year").textContent = now.getFullYear();
+      
+      // Update every second
+      setTimeout(updateDateTime, 1000);
+    }
+    
+    // Show custom alert
+    function showAlert(message, type = 'info', duration = 3000) {
+      const alert = document.getElementById("customAlert");
+      const alertMessage = document.getElementById("alertMessage");
+      
+      // Set alert type and message
+      alert.className = `custom-alert show ${type}`;
+      alertMessage.textContent = message;
+      
+      // Set icon based on type
+      let iconClass;
+      switch(type) {
+        case 'error':
+          iconClass = 'fas fa-exclamation-circle';
+          break;
+        case 'success':
+          iconClass = 'fas fa-check-circle';
+          break;
+        case 'warning':
+          iconClass = 'fas fa-exclamation-triangle';
+          break;
+        default:
+          iconClass = 'fas fa-info-circle';
+      }
+      alert.querySelector('i').className = iconClass;
+      
+      // Show alert
+      setTimeout(() => {
+        alert.classList.add('show');
+      }, 10);
+      
+      // Hide after duration
+      setTimeout(() => {
+        alert.classList.remove('show');
+      }, duration);
     }
     
     // Save data to local storage
     function saveData() {
       const hash = document.getElementById("hashInput").value.trim();
-      const odd = document.getElementById("selectedOdd").value;
       const multiplier = document.getElementById("multiplierInput").value;
       
       if (!hash || hash.length !== 128 || !/^[a-f0-9]+$/i.test(hash)) {
-        alert("Please enter a valid 128-character SHA512 hash");
+        showAlert("Please enter a valid 128-character SHA512 hash", "error");
+        document.getElementById("hashInput").focus();
         return;
       }
       
-      if (!odd) {
-        alert("Please select an odd value");
+      if (!multiplier || parseFloat(multiplier) < 1) {
+        showAlert("Please enter a valid multiplier value (minimum 1.00)", "error");
+        document.getElementById("multiplierInput").focus();
         return;
       }
       
@@ -381,8 +487,7 @@
       const dataEntry = {
         timestamp,
         hash,
-        odd,
-        multiplier: multiplier || null
+        multiplier: parseFloat(multiplier).toFixed(2)
       };
       
       collectedData.push(dataEntry);
@@ -390,8 +495,12 @@
       updateTable();
       clearForm();
       
-      // Play success sound
+      showAlert("Data saved successfully!", "success");
       playSound('success');
+      
+      // Scroll to bottom of table
+      const tableContainer = document.querySelector('.data-table-container');
+      tableContainer.scrollTop = tableContainer.scrollHeight;
     }
     
     // Load saved data
@@ -414,8 +523,7 @@
         row.innerHTML = `
           <td>${new Date(entry.timestamp).toLocaleString()}</td>
           <td class="hash-cell">${entry.hash.substring(0, 12)}...${entry.hash.substring(116)}</td>
-          <td>${entry.odd}x</td>
-          <td>${entry.multiplier || '-'}</td>
+          <td>${entry.multiplier}x</td>
           <td>
             <button class="btn btn-secondary btn-sm" onclick="copyHash(${index})">
               <i class="fas fa-copy"></i>
@@ -432,38 +540,166 @@
     // Clear form
     function clearForm() {
       document.getElementById("hashInput").value = '';
-      document.getElementById("selectedOdd").value = '';
       document.getElementById("multiplierInput").value = '';
-      document.querySelectorAll('.odd-btn').forEach(b => b.classList.remove('selected'));
       document.getElementById("hashInput").focus();
+    }
+    
+    // Confirm clear all data
+    function confirmClearAll() {
+      if (collectedData.length === 0) {
+        showAlert("No data to clear", "warning");
+        return;
+      }
+      
+      const confirmMessage = document.createElement("div");
+      confirmMessage.innerHTML = `
+        <p>Are you sure you want to delete ALL ${collectedData.length} entries?</p>
+        <p class="text-danger"><i class="fas fa-exclamation-triangle"></i> This action cannot be undone!</p>
+      `;
+      
+      // Create custom confirm dialog
+      const dialog = document.createElement("div");
+      dialog.style.position = "fixed";
+      dialog.style.top = "0";
+      dialog.style.left = "0";
+      dialog.style.width = "100%";
+      dialog.style.height = "100%";
+      dialog.style.backgroundColor = "rgba(0,0,0,0.8)";
+      dialog.style.display = "flex";
+      dialog.style.justifyContent = "center";
+      dialog.style.alignItems = "center";
+      dialog.style.zIndex = "1000";
+      
+      const dialogContent = document.createElement("div");
+      dialogContent.style.background = "var(--dark-2)";
+      dialogContent.style.padding = "20px";
+      dialogContent.style.borderRadius = "10px";
+      dialogContent.style.maxWidth = "400px";
+      dialogContent.style.width = "90%";
+      dialogContent.style.border = "1px solid var(--danger)";
+      
+      dialogContent.innerHTML = `
+        <h3 style="margin-bottom: 15px; color: var(--danger);">
+          <i class="fas fa-exclamation-circle"></i> Confirm Deletion
+        </h3>
+        <p style="margin-bottom: 20px;">Are you sure you want to delete ALL ${collectedData.length} entries?</p>
+        <p style="color: var(--danger); margin-bottom: 20px;">
+          <i class="fas fa-exclamation-triangle"></i> This action cannot be undone!
+        </p>
+        <div style="display: flex; gap: 10px; justify-content: flex-end;">
+          <button id="confirmCancel" style="padding: 8px 15px; background: var(--dark-3); border: none; border-radius: 5px; color: white; cursor: pointer;">
+            Cancel
+          </button>
+          <button id="confirmDelete" style="padding: 8px 15px; background: var(--danger); border: none; border-radius: 5px; color: white; cursor: pointer;">
+            Delete All
+          </button>
+        </div>
+      `;
+      
+      dialog.appendChild(dialogContent);
+      document.body.appendChild(dialog);
+      
+      // Add event listeners
+      document.getElementById("confirmCancel").addEventListener('click', () => {
+        document.body.removeChild(dialog);
+      });
+      
+      document.getElementById("confirmDelete").addEventListener('click', () => {
+        clearAllData();
+        document.body.removeChild(dialog);
+      });
+    }
+    
+    // Clear all data
+    function clearAllData() {
+      collectedData = [];
+      localStorage.removeItem('aviatorHashData');
+      updateTable();
+      showAlert("All data has been cleared", "success");
+      playSound('delete');
     }
     
     // Copy hash to clipboard
     function copyHash(index) {
       navigator.clipboard.writeText(collectedData[index].hash)
         .then(() => {
-          alert("Hash copied to clipboard!");
+          showAlert("Hash copied to clipboard!", "success", 2000);
           playSound('click');
         })
         .catch(err => {
-          alert("Failed to copy hash: " + err);
+          showAlert("Failed to copy hash", "error");
         });
     }
     
     // Delete entry
     function deleteEntry(index) {
-      if (confirm("Are you sure you want to delete this entry?")) {
+      const confirmMessage = document.createElement("div");
+      confirmMessage.innerHTML = `
+        <p>Are you sure you want to delete this entry?</p>
+        <p><small>Hash: ${collectedData[index].hash.substring(0, 12)}...${collectedData[index].hash.substring(116)}</small></p>
+      `;
+      
+      // Create custom confirm dialog
+      const dialog = document.createElement("div");
+      dialog.style.position = "fixed";
+      dialog.style.top = "0";
+      dialog.style.left = "0";
+      dialog.style.width = "100%";
+      dialog.style.height = "100%";
+      dialog.style.backgroundColor = "rgba(0,0,0,0.8)";
+      dialog.style.display = "flex";
+      dialog.style.justifyContent = "center";
+      dialog.style.alignItems = "center";
+      dialog.style.zIndex = "1000";
+      
+      const dialogContent = document.createElement("div");
+      dialogContent.style.background = "var(--dark-2)";
+      dialogContent.style.padding = "20px";
+      dialogContent.style.borderRadius = "10px";
+      dialogContent.style.maxWidth = "400px";
+      dialogContent.style.width = "90%";
+      dialogContent.style.border = "1px solid var(--danger)";
+      
+      dialogContent.innerHTML = `
+        <h3 style="margin-bottom: 15px; color: var(--danger);">
+          <i class="fas fa-trash"></i> Confirm Deletion
+        </h3>
+        <p style="margin-bottom: 5px;">Are you sure you want to delete this entry?</p>
+        <p style="font-size: 0.8rem; margin-bottom: 20px; color: var(--light-2);">
+          Hash: ${collectedData[index].hash.substring(0, 12)}...${collectedData[index].hash.substring(116)}
+        </p>
+        <div style="display: flex; gap: 10px; justify-content: flex-end;">
+          <button id="confirmCancel" style="padding: 8px 15px; background: var(--dark-3); border: none; border-radius: 5px; color: white; cursor: pointer;">
+            Cancel
+          </button>
+          <button id="confirmDelete" style="padding: 8px 15px; background: var(--danger); border: none; border-radius: 5px; color: white; cursor: pointer;">
+            Delete
+          </button>
+        </div>
+      `;
+      
+      dialog.appendChild(dialogContent);
+      document.body.appendChild(dialog);
+      
+      // Add event listeners
+      document.getElementById("confirmCancel").addEventListener('click', () => {
+        document.body.removeChild(dialog);
+      });
+      
+      document.getElementById("confirmDelete").addEventListener('click', () => {
         collectedData.splice(index, 1);
         localStorage.setItem('aviatorHashData', JSON.stringify(collectedData));
         updateTable();
+        document.body.removeChild(dialog);
+        showAlert("Entry deleted", "success");
         playSound('delete');
-      }
+      });
     }
     
     // Export to JSON
     function exportJson() {
       if (collectedData.length === 0) {
-        alert("No data to export");
+        showAlert("No data to export", "warning");
         return;
       }
       
@@ -477,21 +713,22 @@
       linkElement.setAttribute('download', exportFileDefaultName);
       linkElement.click();
       
+      showAlert("JSON export started", "success");
       playSound('success');
     }
     
-    // Export to Excel
+    // Export to Excel (CSV)
     function exportExcel() {
       if (collectedData.length === 0) {
-        alert("No data to export");
+        showAlert("No data to export", "warning");
         return;
       }
       
-      // Create CSV content
-      let csvContent = "Timestamp,SHA512 Hash,Odd,Multiplier\n";
+      // Create CSV content with only hash and multiplier
+      let csvContent = "SHA512 Hash,Multiplier\n";
       
       collectedData.forEach(entry => {
-        csvContent += `"${new Date(entry.timestamp).toLocaleString()}","${entry.hash}","${entry.odd}x","${entry.multiplier || ''}"\n`;
+        csvContent += `"${entry.hash}","${entry.multiplier}"\n`;
       });
       
       const dataUri = 'data:text/csv;charset=utf-8,'+ encodeURIComponent(csvContent);
@@ -502,6 +739,7 @@
       linkElement.setAttribute('download', exportFileDefaultName);
       linkElement.click();
       
+      showAlert("CSV export started", "success");
       playSound('success');
     }
     
